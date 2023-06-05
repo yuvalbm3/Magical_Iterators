@@ -14,11 +14,6 @@ namespace ariel
     {
     private:
         std::vector<int> _container;
-        std::string _name;
-        std::vector<int> getCont()
-        {
-            return _container;
-        }
 
     public:
         MagicalContainer();
@@ -26,43 +21,65 @@ namespace ariel
         ~MagicalContainer();
         void addElement(int);
         void removeElement(int);
-        int size();
+        int size() const{
+            return (int)this->_container.size();
+        }
 
         class AscendingIterator
         {
         private:
-            MagicalContainer& _ascIt;
-            int _size;
+            MagicalContainer* _ascIt;
+            // int _size;
+            std::vector<int>::size_type _index;
 
         public:
-            AscendingIterator(MagicalContainer&);
-            ~AscendingIterator();
-            int size();
-            AscendingIterator begin();
-            AscendingIterator end();
+            AscendingIterator(MagicalContainer &container) : _ascIt(&container), _index(0) {
+                std::sort(_ascIt->_container.begin(), _ascIt->_container.end());
+            }
+            AscendingIterator(const AscendingIterator &other) : _ascIt(other._ascIt), _index(other._index) {};
+            AscendingIterator() : _ascIt(nullptr), _index(0) {};
+            ~AscendingIterator() {}
+            // int size();
+            AscendingIterator begin() const;
+            AscendingIterator end() const;
+            
+            size_t get_index(){
+                return _index;
+            }
 
-            int operator*() const;
+            //move assignment operator
+            AscendingIterator &operator=(AscendingIterator &&other) noexcept;
+
+            //move constructor
+            AscendingIterator(AscendingIterator&& other) noexcept : _ascIt(other._ascIt), _index(0) {}
+
+            AscendingIterator& operator=(const AscendingIterator &other);
+
+            int operator*();
             friend bool operator==(const AscendingIterator& rhs, const AscendingIterator& lhs);
             friend bool operator!=(const AscendingIterator& rhs, const AscendingIterator& lhs);
             friend bool operator>(const AscendingIterator& rhs, const AscendingIterator& lhs);
             friend bool operator<(const AscendingIterator& rhs, const AscendingIterator& lhs);
-            AscendingIterator& operator++();
+            AscendingIterator operator++();
         };
 
         class SideCrossIterator
         {
         private:
-            MagicalContainer& _siCoIt;
-            int _size;
+            MagicalContainer* _siCoIt;
+            std::vector<int>::size_type _index;
 
         public:
             SideCrossIterator(MagicalContainer &other_cont);
             ~SideCrossIterator();
-            int size();
             SideCrossIterator begin() const;
             SideCrossIterator end() const;
 
-            int operator*() const;
+            size_t get_index(){
+                return _index;
+            }
+
+            int operator*();
             friend bool operator==(const SideCrossIterator& rhs, const SideCrossIterator& lhs);
             friend bool operator!=(const SideCrossIterator& rhs, const SideCrossIterator& lhs);
             friend bool operator>(const SideCrossIterator& rhs, const SideCrossIterator& lhs);
@@ -73,18 +90,21 @@ namespace ariel
         class PrimeIterator
         {
         private:
-            MagicalContainer& _primIt;
-            int _size;
+            MagicalContainer* _primIt;
+            std::vector<int>::size_type _index;
 
         public:
             PrimeIterator(MagicalContainer &other_cont);
             ~PrimeIterator();
 
-            int size();
             PrimeIterator begin() const;
             PrimeIterator end() const;
             
-            int operator*() const;
+            size_t get_index(){
+                return _index;
+            }
+
+            int operator*();
             friend bool operator==(const PrimeIterator& rhs, const PrimeIterator& lhs);
             friend bool operator!=(const PrimeIterator& rhs, const PrimeIterator& lhs);
             friend bool operator>(const PrimeIterator& rhs, const PrimeIterator& lhs);

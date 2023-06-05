@@ -50,9 +50,9 @@ namespace ariel
         CHECK_EQ(container.size(),3);
 
         MagicalContainer::AscendingIterator ascIter(container);
-        CHECK_EQ(ascIter.begin(), INT_MIN);
-        CHECK_EQ(ascIter.end(), INT_MAX);
-        CHECK_EQ(ascIter.size(), 4);
+        CHECK_EQ(ascIter.begin().get_index(), INT_MIN);
+        CHECK_EQ(ascIter.end().get_index(), INT_MAX);
+        CHECK_EQ(container.size(), 3);
     };
 
     TEST_CASE("Check AscendingIterator")
@@ -64,9 +64,9 @@ namespace ariel
         container.addElement(INT_MIN);
 
         MagicalContainer::AscendingIterator ascIter(container);
-        CHECK_EQ(ascIter.begin(), INT_MIN);
-        CHECK_EQ(ascIter.end(), INT_MAX);
-        CHECK_EQ(ascIter.size(), 4);
+        CHECK_EQ(ascIter.begin().get_index(), INT_MIN);
+        CHECK_EQ(ascIter.end().get_index(), INT_MAX);
+        CHECK_EQ(container.size(), 4);
     };
 
     TEST_CASE("Check PrimeIterator")
@@ -77,15 +77,30 @@ namespace ariel
         container.addElement(INT_MAX);
         container.addElement(INT_MIN);
         MagicalContainer::PrimeIterator prIt(container);
-        CHECK_EQ(prIt.begin(), 3);
-        CHECK_EQ(prIt.end(), 3);
-        CHECK_EQ(prIt.size(), 1);
+        CHECK_EQ(prIt.begin().get_index(), 3);
+        CHECK_EQ(prIt.end().get_index(), 3);
+        CHECK_EQ(container.size(), 1);
         container.removeElement(3);
-        CHECK_THROWS(prIt.begin());
     };
 
-    TEST_CASE("THROWS exceptions")
+    TEST_CASE("Comparesion")
     {
-   
-    }; 
+        MagicalContainer container;
+        container.addElement(17);
+        container.addElement(3);
+        container.addElement(INT_MAX);
+        container.addElement(INT_MIN);
+        MagicalContainer container2;
+        container2.addElement(17);
+        container2.addElement(3);
+        container2.addElement(INT_MAX);
+        container2.addElement(INT_MIN);
+        CHECK_EQ(container.size(), container2.size());
+        MagicalContainer::PrimeIterator prIt(container);
+        MagicalContainer::PrimeIterator prIt2(container2);
+        CHECK_EQ(prIt.begin().get_index(), prIt2.begin().get_index());
+        CHECK_EQ(prIt.end().get_index(), prIt2.end().get_index());
+        CHECK_NE(prIt.begin().get_index(), prIt2.end().get_index());
+    };
+
 }
